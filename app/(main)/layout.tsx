@@ -1,17 +1,10 @@
-import type { Metadata } from "next";
-
+import Navbar from "@/components/Navbar";
 import { Google_Sans } from "next/font/google";
-import "./globals.css";
 
 const googleSans = Google_Sans({
   variable: "--font-google-sans",
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  title: "Techie Blogs",
-  description: "lorem ipsum dolor sit amet consectetur adipisicing elit",
-};
 
 export default function RootLayout({
   children,
@@ -20,7 +13,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${googleSans.variable} antialiased`}>{children}</body>
+      <body className={`${googleSans.variable} antialiased`}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
