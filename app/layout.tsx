@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-
-import { Google_Sans } from "next/font/google";
+import { AuthProvider } from "./context/AuthContext";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const googleSans = Google_Sans({
-  variable: "--font-google-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -20,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${googleSans.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} antialiased`}>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

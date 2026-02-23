@@ -1,4 +1,4 @@
-import BlogCard from "@/components/BlogCard";
+import BlogContainer from "@/components/BlogContainer";
 
 export default function BlogHome() {
   return (
@@ -9,11 +9,7 @@ export default function BlogHome() {
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid vel
           aliquam eveniet nostrum nesciunt dolore. Lorem ipsum dolor sit amet
         </p>
-        <div className="grid grid-cols-3 gap-6 mt-8">
-          <BlogCard />
-          <BlogCard />
-          <BlogCard />
-        </div>
+        <BlogContainer />
       </main>
     </div>
   );
