@@ -21,6 +21,8 @@ type BlogType = {
   content?: string;
   banner_img?: string;
   created_at: string;
+  first_name: string;
+  last_name: string;
 };
 
 export default function BlogDetail({ id }: Props) {
@@ -77,7 +79,9 @@ export default function BlogDetail({ id }: Props) {
 
       <div className="flex justify-between items-center pt-2 text-sm text-gray-800 mb-3">
         <div className="flex gap-3">
-          <p>Posted by Admin</p>
+          <p>
+            Posted by {blog.first_name} {blog.last_name}
+          </p>
           <p>
             Posted on{" "}
             {new Date(blog.created_at).toLocaleDateString("en-IN", {

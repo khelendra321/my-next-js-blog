@@ -16,19 +16,26 @@ export default function Navbar() {
       <div className="flex items-center h-16 bg-gray-100 px-10 border-b border-gray-300">
         <div className="flex items-center justify-between w-full">
           <div className="text-xl font-bold">Techie Blogs</div>
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
             <Link href="/" className="mylink">
               Home
             </Link>
-            <Link href="/blog" className="mylink">
-              My blogs
-            </Link>
             {isLoggedIn ? (
               <>
+                <Link href="/createblog" className="mylink">
+                  Create Blog
+                </Link>
+                <Link href="/myblog" className="mylink">
+                  My blogs
+                </Link>
                 <Link href="/profile" className="mylink">
                   Profile
                 </Link>
-                <button onClick={handleLogout} className="mylink text-red-500">
+                <button
+                  onClick={handleLogout}
+                  className="mylink"
+                  style={{ color: "red" }}
+                >
                   Logout
                 </button>
               </>

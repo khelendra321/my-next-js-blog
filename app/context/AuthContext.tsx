@@ -2,6 +2,7 @@
 
 import { jwtDecode } from "jwt-decode";
 import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type User = {
   id: string;
@@ -20,7 +21,6 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuthContext = () => useContext(AuthContext);
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
@@ -37,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem("accessToken");
+    toast.success("Logged out successfully!");
     setUser(null);
   };
 
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem("accessToken");
     if (token) {
       const decoded: any = jwtDecode(token);
+
       const isExpired = decoded.exp * 1000 < Date.now();
       if (!isExpired) {
         setUser({
@@ -61,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user, //
         isLoggedIn: !!user,
         login,
         logout,

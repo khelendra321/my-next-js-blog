@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { AuthProvider } from "./context/AuthContext";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <Toaster position="top-right" reverseOrder={false} />
+        </AuthProvider>
       </body>
     </html>
   );
