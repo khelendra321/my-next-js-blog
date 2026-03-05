@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import TanStackProviders from "@/components/TanStackProviders";
 
 export default function MainLayout({
   children,
@@ -8,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Navbar />
-      {children}
+      <TanStackProviders>{children}</TanStackProviders>
     </>
   );
 }

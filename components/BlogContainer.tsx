@@ -1,43 +1,38 @@
 "use client";
 import BlogCard from "./BlogCard";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import Loader from "./Loader";
+import { useQuery } from "@tanstack/react-query";
 
 type Props = {
   userId?: string; // optional
 };
 
 export default function BlogContainer({ userId }: Props) {
-  const [blogs, setBlogs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  // GLOBAL STORAGE >> redux / zustand
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        let url = "https://beamingindia.com/dev/techie/Api/AllBlogs";
-        if (userId) {
-          url = `https://beamingindia.com/dev/techie/Api/BlogByUserId?user_id=${userId}`;
-        }
-        const response = await axios.get(url);
-        setBlogs(response.data.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+  const { data, isPending } = useQuery({
+    queryKey: ["blogs", "blogs" + userId],
+    queryFn: async () => {
+      if (userId) {
+        return fetch(
+          `https://beamingindia.com/dev/techie/Api/BlogByUserId?user_id=${userId}`,
+        ).then((res) => res.json());
       }
-    };
-    fetchBlogs();
-  }, []);
+      return fetch("https://beamingindia.com/dev/techie/Api/AllBlogs").then(
+        (res) => res.json(),
+      );
+    },
+  });
 
   return (
     <div>
-      {loading && <Loader text="Loading blogs..." />}
-      <div className="grid grid-cols-3 gap-6 mt-8">
-        {blogs.map((blog) => (
-          <BlogCard key={blog.id} {...blog} />
-        ))}
+      {isPending && <Loader text="Loading blogs..." />}
+      <div className="grid grid-cols-3 gap-6 mt-5">
+        {userId
+          ? data?.data.map((blog: any) => (
+              <BlogCard key={blog.id} blog={blog} />
+            ))
+          : data?.data.map((userBlog: any) => (
+              <BlogCard key={userBlog.id} blog={userBlog} />
+            ))}
       </div>
     </div>
   );

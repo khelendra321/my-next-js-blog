@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useAuth } from "@/app/context/AuthContext";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 export default function CreateBlogForm() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState<{
     title: string;
     content: string;
@@ -17,25 +18,6 @@ export default function CreateBlogForm() {
     content: "",
     banner_img: null,
   });
-
-  //   const handleChange = (
-  //     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  //   ) => {
-  //     if (e.target instanceof HTMLInputElement && e.target.type === "file") {
-  //       const file = e.target.files?.[0];
-  //       if (file) {
-  //         setFormData({
-  //           ...formData,
-  //           banner_img: file,
-  //         });
-  //       }
-  //     } else {
-  //       setFormData({
-  //         ...formData,
-  //         [e.target.name]: e.target.value,
-  //       });
-  //     }
-  //   };
 
   const handleTextChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,10 +38,8 @@ export default function CreateBlogForm() {
     }
   };
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
+  const mutation = useMutation({
+    mutationFn: async () => {
       const data = new FormData();
       data.append("title", formData.title);
       data.append("content", formData.content);
@@ -68,7 +48,7 @@ export default function CreateBlogForm() {
         data.append("banner_img", formData.banner_img);
       }
 
-      const response = await axios.post(
+      return axios.post(
         "https://beamingindia.com/dev/techie/Api/AddNewBlog",
         data,
         {
@@ -78,16 +58,22 @@ export default function CreateBlogForm() {
           },
         },
       );
+    },
 
+    onSuccess: () => {
       toast.success("Blog created successfully!");
       router.push("/");
-    } catch (error: any) {
-      console.error(error);
+    },
+
+    onError: (error: any) => {
       const message = error.response?.data?.message || "Blog creation failed!";
       toast.error(message);
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    mutation.mutate();
   };
 
   return (
@@ -133,12 +119,13 @@ export default function CreateBlogForm() {
         </div>
         <button
           type="submit"
+          disabled={mutation.isPending}
           className="w-1/3 bg-blue-500 text-white p-2 rounded-lg"
         >
-          {loading ? (
+          {mutation.isPending ? (
             <div className="flex items-center justify-center">
               <div className="h-5 w-5 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span className="pl-2"> Processing...</span>
+              <span className="pl-2">Processing...</span>
             </div>
           ) : (
             "Create Blog"
